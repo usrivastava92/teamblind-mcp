@@ -1,0 +1,65 @@
+{
+  "name": "@usrivastava92/teamblind-mcp",
+  "version": "0.2.0",
+  "description": "MCP server for TeamBlind. Let your AI agent research Blind discussions on your behalf.",
+  "license": "MIT",
+  "type": "module",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/usrivastava92/teamblind-mcp.git"
+  },
+  "packageManager": "yarn@4.6.0",
+  "engines": {
+    "node": ">=22.14.0"
+  },
+  "files": [
+    "dist"
+  ],
+  "bin": "./dist/index.js",
+  "scripts": {
+    "clean": "node -e \"require('fs').rmSync('dist', {recursive:true,force:true})\"",
+    "build": "yarn clean && tsc -p tsconfig.json",
+    "prepublishOnly": "yarn build",
+    "build:start": "yarn build && npx .",
+    "dev": "tsx src/index.ts",
+    "login": "tsx src/index.ts --login",
+    "lint": "eslint .",
+    "lint:fix": "eslint . --fix",
+    "format": "prettier --write .",
+    "format:check": "prettier --check .",
+    "lint-staged": "lint-staged",
+    "prepare": "husky",
+    "start": "node dist/index.js",
+    "test": "node --import tsx --test test/**/*.test.ts",
+    "install:browsers": "npx playwright install chromium"
+  },
+  "dependencies": {
+    "@modelcontextprotocol/sdk": "^1.27.1",
+    "playwright": "^1.57.0",
+    "zod": "^4.3.6"
+  },
+  "devDependencies": {
+    "@eslint/js": "^10.0.1",
+    "@semantic-release/changelog": "^6.0.3",
+    "@semantic-release/git": "^10.0.1",
+    "@types/node": "^25.5.0",
+    "eslint": "^10.1.0",
+    "globals": "^17.4.0",
+    "husky": "^9.1.7",
+    "lint-staged": "^16.4.0",
+    "prettier": "^3.8.1",
+    "semantic-release": "^25.0.3",
+    "tsx": "^4.21.0",
+    "typescript": "^6.0.2",
+    "typescript-eslint": "^8.57.2"
+  },
+  "lint-staged": {
+    "*.{ts,mts,cts}": [
+      "eslint --fix",
+      "prettier --write"
+    ],
+    "*.{js,mjs,cjs,json,md,yml,yaml}": [
+      "prettier --write"
+    ]
+  }
+}

@@ -1,0 +1,13 @@
+{
+  "$schema": "https://opencode.ai/config.json",
+  "mcp": {
+    "teamblind": {
+      "type": "local",
+      "command": ["node", "--import", "tsx", "src/index.ts"],
+      "enabled": true,
+      "env": {
+        "LOG_LEVEL": "DEBUG"
+      }
+    }
+  }
+}
