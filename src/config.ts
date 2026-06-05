@@ -26,6 +26,7 @@ export interface AppConfig {
   cookiesFile: string;
   sourceStateFile: string;
 
+  force: boolean;
   headless: boolean;
   timeoutMs: number;
   toolTimeoutSec: number;
@@ -43,7 +44,12 @@ function parseArgs(): Record<string, string | boolean> {
 
   for (let i = 0; i < args.length; i++) {
     const arg = args[i];
-    if (arg === "--login" || arg === "--no-headless" || arg === "--logout") {
+    if (
+      arg === "--login" ||
+      arg === "--no-headless" ||
+      arg === "--logout" ||
+      arg === "--force"
+    ) {
       result[arg.replace(/^--/, "")] = true;
     } else if (arg.startsWith("--")) {
       const key = arg.replace(/^--/, "");
@@ -84,6 +90,9 @@ export function getConfig(): AppConfig {
       : (process.env.HEADLESS ?? "true").toLowerCase() !== "false" &&
         (process.env.HEADLESS ?? "true").toLowerCase() !== "0";
 
+  const rawLogLevel =
+    (args["log-level"] as string | undefined) ?? process.env.LOG_LEVEL;
+
   const userDataDir =
     (args["user-data-dir"] as string | undefined) ??
     process.env.TEAMBLIND_USER_DATA_DIR ??
@@ -107,6 +116,7 @@ export function getConfig(): AppConfig {
     cookiesFile: join(userDataDir, "cookies.json"),
     sourceStateFile: join(userDataDir, "source-state.json"),
 
+    force: args["force"] === true,
     headless: mode === "login" ? false : headless,
     timeoutMs: Number(
       args["timeout"] ?? process.env.TIMEOUT ?? DEFAULT_TIMEOUT_MS
@@ -116,11 +126,14 @@ export function getConfig(): AppConfig {
         process.env.TOOL_TIMEOUT ??
         DEFAULT_TOOL_TIMEOUT_SEC
     ),
-    loginTimeoutMs: DEFAULT_LOGIN_TIMEOUT_MS,
+    loginTimeoutMs:
+      Number(
+        args["login-timeout"] ??
+          process.env.LOGIN_TIMEOUT ??
+          DEFAULT_LOGIN_TIMEOUT_MS / 1000
+      ) * 1000,
     logLevel: parseLogLevel(
-      (args["log-level"] as string | undefined) ??
-        process.env.LOG_LEVEL ??
-        "ERROR"
+      rawLogLevel ?? (mode === "server" ? "ERROR" : "INFO")
     ),
     viewport,
     userAgent:

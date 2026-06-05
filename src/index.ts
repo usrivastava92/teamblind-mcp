@@ -348,6 +348,11 @@ async function startMCP(): Promise<void> {
 
 async function main(): Promise<void> {
   if (config.mode === "login") {
+    if (config.force) {
+      info("Force login requested. Clearing stored authentication state...");
+      clearAuthState(config);
+    }
+
     await interactiveLogin(config);
     return;
   }
@@ -365,6 +370,10 @@ async function main(): Promise<void> {
       console.error("Usage:");
       console.error(
         "  teamblind-mcp --login     Interactive login (opens browser)"
+      );
+      console.error("  teamblind-mcp --login --force");
+      console.error(
+        "                           Clear saved session before logging in"
       );
       console.error("  teamblind-mcp --logout    Clear stored authentication");
       console.error("  teamblind-mcp [--no-headless] [--log-level DEBUG]");

@@ -4,8 +4,22 @@ import { dirname } from "node:path";
 
 import type { AppConfig } from "./config.js";
 import { BrowserManager } from "./browser.js";
-import { waitForLogin } from "./auth.js";
+import { isLoggedIn, waitForLogin } from "./auth.js";
 import { info, warn, debug } from "./logger.js";
+
+async function writeSourceState(config: AppConfig): Promise<void> {
+  const sourceState = {
+    runtime: `${process.platform}-${process.arch}`,
+    loginAt: new Date().toISOString(),
+    baseUrl: config.baseUrl
+  };
+
+  const stateDir = dirname(config.sourceStateFile);
+  await mkdir(stateDir, { recursive: true, mode: 0o700 });
+  writeFileSync(config.sourceStateFile, JSON.stringify(sourceState, null, 2), {
+    mode: 0o600
+  });
+}
 
 export async function interactiveLogin(config: AppConfig): Promise<void> {
   info("Opening browser for TeamBlind login...");
@@ -25,6 +39,15 @@ export async function interactiveLogin(config: AppConfig): Promise<void> {
       waitUntil: "domcontentloaded",
       timeout: config.timeoutMs
     });
+    await browser.page.waitForTimeout(2000);
+
+    if (await isLoggedIn(browser.page)) {
+      await browser.exportCookies(config.cookiesFile);
+      await writeSourceState(config);
+      info("An active TeamBlind session is already available. Nothing to do.");
+      info(`Profile stored at: ${config.profileDir}`);
+      return;
+    }
 
     const loginButton = await browser.page.$(
       'a[href*="/login"], button:has-text("Sign in"), button:has-text("Log in"), a:has-text("Sign in"), a:has-text("Log in")'
@@ -33,13 +56,12 @@ export async function interactiveLogin(config: AppConfig): Promise<void> {
     if (loginButton) {
       info("Clicking login button...");
       await loginButton.click().catch(() => {
-        debug("Click failed, navigating to login page directly");
+        debug("Click failed, waiting for manual login navigation");
       });
     } else {
-      await browser.page.goto(`${config.baseUrl}/login`, {
-        waitUntil: "domcontentloaded",
-        timeout: config.timeoutMs
-      });
+      info(
+        "Could not find a login button automatically. Please start the sign-in flow manually in the browser window."
+      );
     }
 
     await browser.page.waitForLoadState("domcontentloaded");
@@ -50,22 +72,7 @@ export async function interactiveLogin(config: AppConfig): Promise<void> {
     await new Promise((resolve) => setTimeout(resolve, 2000));
 
     await browser.exportCookies(config.cookiesFile);
-
-    const sourceState = {
-      runtime: `${process.platform}-${process.arch}`,
-      loginAt: new Date().toISOString(),
-      baseUrl: config.baseUrl
-    };
-
-    const stateDir = dirname(config.sourceStateFile);
-    await mkdir(stateDir, { recursive: true, mode: 0o700 });
-    writeFileSync(
-      config.sourceStateFile,
-      JSON.stringify(sourceState, null, 2),
-      {
-        mode: 0o600
-      }
-    );
+    await writeSourceState(config);
 
     info("Login successful! Session saved. You can now use the MCP server.");
     info(`Profile stored at: ${config.profileDir}`);

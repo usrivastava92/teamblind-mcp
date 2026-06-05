@@ -2,6 +2,16 @@ import type { Page } from "playwright";
 
 import { debug, info, warn } from "./logger.js";
 
+function formatTimeout(timeoutMs: number): string {
+  const totalSeconds = Math.floor(timeoutMs / 1000);
+  if (totalSeconds % 60 === 0) {
+    const minutes = totalSeconds / 60;
+    return `${minutes} minute${minutes === 1 ? "" : "s"}`;
+  }
+
+  return `${totalSeconds} second${totalSeconds === 1 ? "" : "s"}`;
+}
+
 export async function isLoggedIn(page: Page): Promise<boolean> {
   try {
     const currentUrl = page.url();
@@ -99,7 +109,7 @@ export async function waitForLogin(
   timeoutMs: number
 ): Promise<void> {
   info(
-    "Waiting for login... Please sign in using the browser window (5 minute timeout)."
+    `Waiting for login... Please sign in using the browser window (${formatTimeout(timeoutMs)} timeout).`
   );
 
   const start = Date.now();
@@ -115,5 +125,7 @@ export async function waitForLogin(
     }
   }
 
-  throw new Error("Login timeout: No login detected within 5 minutes.");
+  throw new Error(
+    `Login timeout: No login detected within ${formatTimeout(timeoutMs)}.`
+  );
 }

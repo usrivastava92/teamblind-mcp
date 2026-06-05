@@ -28,7 +28,15 @@ Give Claude, VS Code Copilot, and any MCP-compatible assistant access to your Te
 npx @usrivastava92/teamblind-mcp --login
 ```
 
-This opens a Chromium browser window. Log into TeamBlind normally (Google, Apple, or email). The server detects your login, saves the session, and exits. You have **5 minutes** to complete login and any 2FA challenges.
+This opens a Chromium browser window. Log into TeamBlind normally (Google, Apple, or email). The server detects your login, saves the session, and exits. You have **5 minutes** to complete login and any 2FA challenges by default.
+
+If you are already logged in, the command detects the active session, refreshes the saved state, and exits without forcing the login screen.
+
+To intentionally reset the saved session and log in again:
+
+```bash
+npx @usrivastava92/teamblind-mcp --login --force
+```
 
 #### Client Configuration
 
@@ -61,7 +69,7 @@ This opens a Chromium browser window. Log into TeamBlind normally (Google, Apple
 
 The `@latest` tag ensures you always run the newest version — `npx` checks npm on each client launch and updates automatically. The server starts quickly and reuses your saved browser session from `~/.config/teamblind-mcp/`.
 
-> **Note:** Early tool calls may return an authentication error if your session has expired. Re-run `npx @usrivastava92/teamblind-mcp --login` to refresh.
+> **Note:** Early tool calls may return an authentication error if your session has expired. Re-run `npx @usrivastava92/teamblind-mcp --login` to refresh, or add `--force` to wipe the saved session first.
 
 ---
 
@@ -122,6 +130,7 @@ yarn start
 
 ```
 teamblind-mcp --login          Open browser for interactive login
+teamblind-mcp --login --force  Clear saved session, then re-login
 teamblind-mcp --logout         Clear stored authentication state
 teamblind-mcp [flags]          Start the MCP server (stdio)
 ```
@@ -130,6 +139,7 @@ teamblind-mcp [flags]          Start the MCP server (stdio)
 | ----------------- | ------------------------- | ---------------------------------------------- |
 | `--no-headless`   | `false`                   | Show the browser window (useful for debugging) |
 | `--log-level`     | `ERROR`                   | One of `DEBUG`, `INFO`, `WARN`, `ERROR`        |
+| `--login-timeout` | `300`                     | Login timeout in seconds                       |
 | `--user-data-dir` | `~/.config/teamblind-mcp` | Path to persistent browser profile             |
 | `--timeout`       | `15000`                   | Browser page operation timeout in milliseconds |
 | `--tool-timeout`  | `180`                     | Per-tool execution timeout in seconds          |
@@ -141,6 +151,7 @@ Environment variable equivalents exist for most flags:
 | `TEAMBLIND_BASE_URL`      | Base URL (default: `https://www.teamblind.com`) |
 | `TEAMBLIND_USER_DATA_DIR` | Override session storage path                   |
 | `HEADLESS`                | Set to `0` or `false` for non-headless          |
+| `LOGIN_TIMEOUT`           | Login timeout in seconds                        |
 | `LOG_LEVEL`               | Logging level                                   |
 | `TIMEOUT`                 | Browser page timeout in ms                      |
 | `TOOL_TIMEOUT`            | Per-tool timeout in seconds                     |
@@ -166,15 +177,15 @@ All session data is stored under `~/.config/teamblind-mcp/`:
 
 ## Troubleshooting
 
-| Symptom                                      | Fix                                                                                                      |
-| -------------------------------------------- | -------------------------------------------------------------------------------------------------------- |
-| **"No authentication state found"**          | You haven't logged in yet. Run `npx @usrivastava92/teamblind-mcp --login`.                               |
-| **"Not logged into TeamBlind"**              | Your session may have expired. Run `npx @usrivastava92/teamblind-mcp --login` to create a fresh session. |
-| **Browser window doesn't open on `--login`** | Make sure Chromium is installed: `npx playwright install chromium`.                                      |
-| **Tool calls time out**                      | Increase the timeout: `--timeout 30000` or set `TIMEOUT=30000`.                                          |
-| **Want to debug browser actions?**           | Use `--no-headless` to see the browser window while tools execute.                                       |
-| **Clear everything and start fresh**         | Run `npx @usrivastava92/teamblind-mcp --logout` then `npx @usrivastava92/teamblind-mcp --login`.         |
-| **Login hangs or captcha appears**           | Run `--login` with `--no-headless` so you can solve the captcha manually in the browser window.          |
+| Symptom                                      | Fix                                                                                                                                                              |
+| -------------------------------------------- | ---------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| **"No authentication state found"**          | You haven't logged in yet. Run `npx @usrivastava92/teamblind-mcp --login`.                                                                                       |
+| **"Not logged into TeamBlind"**              | Your session may have expired. Run `npx @usrivastava92/teamblind-mcp --login` to reuse it if still valid, or `--login --force` for a fresh session.              |
+| **Browser window doesn't open on `--login`** | Make sure Chromium is installed: `npx playwright install chromium`.                                                                                              |
+| **Tool calls time out**                      | Increase the timeout: `--timeout 30000` or set `TIMEOUT=30000`.                                                                                                  |
+| **Want to debug browser actions?**           | Use `--no-headless` to see the browser window while tools execute.                                                                                               |
+| **Clear everything and start fresh**         | Run `npx @usrivastava92/teamblind-mcp --logout` then `npx @usrivastava92/teamblind-mcp --login`, or just use `npx @usrivastava92/teamblind-mcp --login --force`. |
+| **Login hangs or captcha appears**           | Run `--login` with `--no-headless` so you can solve the captcha manually in the browser window.                                                                  |
 
 ---
 
