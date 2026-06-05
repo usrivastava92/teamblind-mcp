@@ -1,3 +1,10 @@
+# [1.1.0](https://github.com/usrivastava92/teamblind-mcp/compare/v1.0.0...v1.1.0) (2026-06-05)
+
+
+### Features
+
+* improve login flow ([f50cd85](https://github.com/usrivastava92/teamblind-mcp/commit/f50cd857c1dc410afed04f121ff2d069ee4d7498))
+
 # 1.0.0 (2026-06-04)
 
 
