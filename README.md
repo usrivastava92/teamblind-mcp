@@ -181,7 +181,7 @@ All session data is stored under `~/.config/teamblind-mcp/`:
 | -------------------------------------------- | ---------------------------------------------------------------------------------------------------------------------------------------------------------------- |
 | **"No authentication state found"**          | You haven't logged in yet. Run `npx @usrivastava92/teamblind-mcp --login`.                                                                                       |
 | **"Not logged into TeamBlind"**              | Your session may have expired. Run `npx @usrivastava92/teamblind-mcp --login` to reuse it if still valid, or `--login --force` for a fresh session.              |
-| **Browser window doesn't open on `--login`** | Make sure Chromium is installed: `npx playwright install chromium`.                                                                                              |
+| **Browser window doesn't open on `--login`** | Chromium is downloaded automatically on `npm install`. If missing, run: `npx playwright install chromium`.                                                       |
 | **Tool calls time out**                      | Increase the timeout: `--timeout 30000` or set `TIMEOUT=30000`.                                                                                                  |
 | **Want to debug browser actions?**           | Use `--no-headless` to see the browser window while tools execute.                                                                                               |
 | **Clear everything and start fresh**         | Run `npx @usrivastava92/teamblind-mcp --logout` then `npx @usrivastava92/teamblind-mcp --login`, or just use `npx @usrivastava92/teamblind-mcp --login --force`. |

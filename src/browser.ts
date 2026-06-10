@@ -1,3 +1,4 @@
+import { execSync } from "node:child_process";
 import { existsSync, mkdirSync, readFileSync, writeFileSync } from "node:fs";
 import { dirname } from "node:path";
 
@@ -9,7 +10,7 @@ import {
 } from "playwright";
 
 import type { AppConfig } from "./config.js";
-import { info, debug, warn } from "./logger.js";
+import { info, debug, warn, error as logError } from "./logger.js";
 
 interface CookieExport {
   cookies: Array<{
@@ -22,6 +23,21 @@ interface CookieExport {
     secure: boolean;
     sameSite: "Strict" | "Lax" | "None";
   }>;
+}
+
+async function ensureBrowsersInstalled(): Promise<void> {
+  const execPath = chromium.executablePath();
+  if (existsSync(execPath)) return;
+
+  info(`Chromium not found at ${execPath}. Installing...`);
+  try {
+    execSync("npx --yes playwright install chromium", {
+      stdio: "inherit",
+      timeout: 120_000
+    });
+  } catch (err) {
+    logError(`Failed to install Chromium: ${String(err)}`);
+  }
 }
 
 export class BrowserManager {
@@ -48,6 +64,8 @@ export class BrowserManager {
   }
 
   async start(): Promise<void> {
+    await ensureBrowsersInstalled();
+
     const { profileDir, headless, viewport, timeoutMs } = this.config;
 
     mkdirSync(profileDir, { recursive: true, mode: 0o700 });

@@ -32,7 +32,8 @@
     "prepare": "husky",
     "start": "node dist/index.js",
     "test": "node --import tsx --test test/**/*.test.ts",
-    "install:browsers": "npx playwright install chromium"
+    "install:browsers": "npx playwright install chromium",
+    "postinstall": "playwright install chromium"
   },
   "dependencies": {
     "@modelcontextprotocol/sdk": "^1.27.1",
