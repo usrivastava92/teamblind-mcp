@@ -1,3 +1,10 @@
+## [1.1.1](https://github.com/usrivastava92/teamblind-mcp/compare/v1.1.0...v1.1.1) (2026-06-10)
+
+
+### Bug Fixes
+
+* auto-install Playwright Chromium on npm install and at runtime ([7cabef3](https://github.com/usrivastava92/teamblind-mcp/commit/7cabef3181e575b28ee50732ace29cdeeace2c03))
+
 # [1.1.0](https://github.com/usrivastava92/teamblind-mcp/compare/v1.0.0...v1.1.0) (2026-06-05)
 
 
