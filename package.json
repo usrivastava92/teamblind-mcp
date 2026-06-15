@@ -8,7 +8,7 @@
     "type": "git",
     "url": "git+https://github.com/usrivastava92/teamblind-mcp.git"
   },
-  "packageManager": "yarn@4.6.0",
+  "packageManager": "yarn@4.17.0",
   "engines": {
     "node": ">=22.14.0"
   },
