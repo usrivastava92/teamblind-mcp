@@ -1,3 +1,12 @@
+## [1.1.2](https://github.com/usrivastava92/teamblind-mcp/compare/v1.1.1...v1.1.2) (2026-06-17)
+
+
+### Bug Fixes
+
+* add contents:read permission to Scorecard workflow ([9d3b902](https://github.com/usrivastava92/teamblind-mcp/commit/9d3b902b3105bd2c58fc9429e12e3183e78f7d88))
+* restore proper spacing between badges ([1c05bf3](https://github.com/usrivastava92/teamblind-mcp/commit/1c05bf37ffcf32a48504650fb33d7bb7fc2e3cdf))
+* use scorecard-action@v2.4.3 instead of [@v2](https://github.com/v2) (floating tag not maintained) ([abf4bf6](https://github.com/usrivastava92/teamblind-mcp/commit/abf4bf6fba2092a15ed4cf456b7b52cc3d0fb97d))
+
 ## [1.1.1](https://github.com/usrivastava92/teamblind-mcp/compare/v1.1.0...v1.1.1) (2026-06-10)
 
 
