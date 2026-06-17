@@ -1,3 +1,10 @@
+## [1.1.3](https://github.com/usrivastava92/teamblind-mcp/compare/v1.1.2...v1.1.3) (2026-06-17)
+
+
+### Bug Fixes
+
+* move id-token:write and security-events:write to job level (Scorecard API requires it) ([ccb0b48](https://github.com/usrivastava92/teamblind-mcp/commit/ccb0b488745b7584686b94bc5eb8f3876a4afb29))
+
 ## [1.1.2](https://github.com/usrivastava92/teamblind-mcp/compare/v1.1.1...v1.1.2) (2026-06-17)
 
 
