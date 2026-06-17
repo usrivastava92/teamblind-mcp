@@ -6,7 +6,8 @@
 
 [![npm version](https://img.shields.io/npm/v/@usrivastava92/teamblind-mcp?color=blue)](https://www.npmjs.com/package/@usrivastava92/teamblind-mcp)
 [![CI](https://github.com/usrivastava92/teamblind-mcp/actions/workflows/ci.yml/badge.svg?branch=main)](https://github.com/usrivastava92/teamblind-mcp/actions/workflows/ci.yml)
-[![License: MIT](https://img.shields.io/badge/license-MIT-blue)](LICENSE)[![OpenSSF Scorecard](https://api.scorecard.dev/projects/github.com/usrivastava92/teamblind-mcp/badge)](https://scorecard.dev/status/github.com/usrivastava92/teamblind-mcp)
+[![License: MIT](https://img.shields.io/badge/license-MIT-blue)](LICENSE)
+[![OpenSSF Scorecard](https://api.scorecard.dev/projects/github.com/usrivastava92/teamblind-mcp/badge)](https://scorecard.dev/status/github.com/usrivastava92/teamblind-mcp)
 
 Give Claude, VS Code Copilot, and any MCP-compatible assistant access to your TeamBlind — search posts, browse your feed, read company gossip, and stay on top of workplace conversations without switching tabs.
 
