@@ -67,7 +67,7 @@ async function getReadyPage(): Promise<{
 
   if (!loggedIn) {
     throw new Error(
-      "Not logged into TeamBlind. Please run: teamblind-mcp --login"
+      "Not logged into TeamBlind. Use the login tool to authenticate, or run: teamblind-mcp --login"
     );
   }
 
@@ -274,6 +274,72 @@ function createMcpServer(): McpServer {
   );
 
   server.registerTool(
+    "login",
+    {
+      title: "Login to TeamBlind",
+      description:
+        "Open a browser window for interactive TeamBlind login. If already authenticated, reports success without opening a browser. Use this when other tools report 'Not logged into TeamBlind' errors."
+    },
+    async () => {
+      const prev = toolLock;
+      let release: () => void;
+      toolLock = new Promise<void>((resolve) => {
+        release = resolve;
+      });
+      try {
+        await prev;
+
+        // Check if already authenticated via the existing browser session
+        try {
+          const browser = getBrowserManager();
+          const page = browser.page;
+          const url = page.url();
+          if (url && url !== "about:blank") {
+            const loggedIn = await isLoggedIn(page);
+            if (loggedIn) {
+              return jsonResult("Already authenticated", {
+                status: "already_authenticated"
+              });
+            }
+          }
+        } catch {
+          // Browser not initialized yet, proceed with login
+        }
+
+        // Perform interactive login (opens a separate browser window)
+        await interactiveLogin(config);
+
+        // Import the saved cookies into the running browser context
+        // so subsequent tool calls are authenticated
+        try {
+          const browser = getBrowserManager();
+          await browser.importCookies(config.cookiesFile);
+          const page = browser.page;
+          const url = page.url();
+          if (url && url !== "about:blank") {
+            await page.reload({
+              waitUntil: "domcontentloaded",
+              timeout: config.timeoutMs
+            });
+            await page.waitForTimeout(2000);
+            const loggedIn = await isLoggedIn(page);
+            browser.setAuthenticated(loggedIn);
+          }
+        } catch {
+          // Browser may not be running, that's fine
+        }
+
+        return jsonResult("Login completed", {
+          status: "success",
+          profile: config.profileDir
+        });
+      } finally {
+        release!();
+      }
+    }
+  );
+
+  server.registerTool(
     "close_session",
     {
       title: "Close Browser Session",
@@ -301,8 +367,9 @@ function createMcpServer(): McpServer {
 
 async function startMCP(): Promise<void> {
   if (!hasAuthState(config)) {
-    error("No authentication state found. Please run: teamblind-mcp --login");
-    process.exit(1);
+    info(
+      "No authentication state found. The login tool is available for interactive login."
+    );
   }
 
   info("Starting TeamBlind MCP server...");
