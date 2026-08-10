@@ -1,3 +1,10 @@
+# [1.2.0](https://github.com/usrivastava92/teamblind-mcp/compare/v1.1.3...v1.2.0) (2026-08-10)
+
+
+### Features
+
+* add login tool for interactive authentication ([f51f3ed](https://github.com/usrivastava92/teamblind-mcp/commit/f51f3ed151453e2bf1ac7c76255f4719276f4c12))
+
 ## [1.1.3](https://github.com/usrivastava92/teamblind-mcp/compare/v1.1.2...v1.1.3) (2026-06-17)
 
 

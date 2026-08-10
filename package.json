@@ -1,6 +1,6 @@
 {
   "name": "@usrivastava92/teamblind-mcp",
-  "version": "1.1.3",
+  "version": "1.2.0",
   "description": "MCP server for TeamBlind. Let your AI agent research Blind discussions on your behalf.",
   "license": "MIT",
   "type": "module",
